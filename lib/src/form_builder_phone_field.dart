@@ -60,7 +60,7 @@ class FormBuilderPhoneField extends FormBuilderField<String> {
     FormFieldValidator<String>? validator,
     String? initialValue,
     InputDecoration decoration = const InputDecoration(),
-    ValueChanged<String>? onChanged,
+    ValueChanged<String?>? onChanged,
     ValueTransformer<String>? valueTransformer,
     bool enabled = true,
     FormFieldSetter<String>? onSaved,
