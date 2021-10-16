@@ -52,6 +52,8 @@ class FormBuilderPhoneField extends FormBuilderField<String> {
   final double? cupertinoPickerSheetHeight;
   final TextAlignVertical? textAlignVertical;
 
+  final double horizontalPadding;
+
   /// Creates field for international phone number input.
   FormBuilderPhoneField({
     Key? key,
@@ -105,6 +107,7 @@ class FormBuilderPhoneField extends FormBuilderField<String> {
     this.isCupertinoPicker = false,
     this.cupertinoPickerSheetHeight,
     this.textAlignVertical,
+    this.horizontalPadding = 0,
   })  : assert(initialValue == null ||
             controller == null ||
             defaultSelectedCountryIsoCode != null),
@@ -125,7 +128,7 @@ class FormBuilderPhoneField extends FormBuilderField<String> {
             final state = field as _FormBuilderPhoneFieldState;
 
             return InputDecorator(
-              decoration: state.decoration,
+              decoration: state.decoration(),
               child: Row(
                 children: <Widget>[
                   GestureDetector(
@@ -307,35 +310,38 @@ class _FormBuilderPhoneFieldState
             ),
             primaryColor: widget.cursorColor ?? Theme.of(context).primaryColor,
           ),
-          child: CountryPickerDialog(
-            titlePadding: widget.titlePadding ?? const EdgeInsets.all(8.0),
-            searchCursorColor:
-                widget.cursorColor ?? Theme.of(context).primaryColor,
-            searchInputDecoration:
-                InputDecoration(hintText: widget.searchText ?? 'Search...'),
-            isSearchable: widget.isSearchable ?? true,
-            title: widget.dialogTitle ??
-                Text(
-                  'Select Your Phone Code',
-                  style: widget.dialogTextStyle ?? widget.style,
-                ),
-            onValuePicked: (Country country) {
-              setState(() => _selectedDialogCountry = country);
-              invokeChange();
-            },
-            itemFilter: widget.countryFilterByIsoCode != null
-                ? (c) => widget.countryFilterByIsoCode!.contains(c.isoCode)
-                : null,
-            priorityList: widget.priorityListByIsoCode != null
-                ? List.generate(
-                    widget.priorityListByIsoCode!.length,
-                    (index) {
-                      return CountryPickerUtils.getCountryByIsoCode(
-                          widget.priorityListByIsoCode![index]);
-                    },
-                  )
-                : null,
-            itemBuilder: _buildDialogItem,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+            child: CountryPickerDialog(
+              titlePadding: widget.titlePadding ?? const EdgeInsets.all(8.0),
+              searchCursorColor:
+                  widget.cursorColor ?? Theme.of(context).primaryColor,
+              searchInputDecoration:
+                  InputDecoration(hintText: widget.searchText ?? 'Search...'),
+              isSearchable: widget.isSearchable ?? true,
+              title: widget.dialogTitle ??
+                  Text(
+                    'Select Your Phone Code',
+                    style: widget.dialogTextStyle ?? widget.style,
+                  ),
+              onValuePicked: (Country country) {
+                setState(() => _selectedDialogCountry = country);
+                invokeChange();
+              },
+              itemFilter: widget.countryFilterByIsoCode != null
+                  ? (c) => widget.countryFilterByIsoCode!.contains(c.isoCode)
+                  : null,
+              priorityList: widget.priorityListByIsoCode != null
+                  ? List.generate(
+                      widget.priorityListByIsoCode!.length,
+                      (index) {
+                        return CountryPickerUtils.getCountryByIsoCode(
+                            widget.priorityListByIsoCode![index]);
+                      },
+                    )
+                  : null,
+              itemBuilder: _buildDialogItem,
+            ),
           ),
         );
       },
